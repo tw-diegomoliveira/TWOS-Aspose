@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<document id="90" adviserName="Arcadian">
+  <section id="28" name="Description of the Sub-Adviser’s Business">
+    <fQuestion id="41" order="1">
+      <wording>Have any personnel or material changes occur in the last 12 months?</wording>
+      <answer>
+        <content>1</content>
+      </answer>
+      <rQuestion id="117" answerType="Text" answerSubType="" order="1">
+        <wording>Material changes?</wording>
+        <description>Describe the changes in terms of materials</description>
+        <answer>
+          <content>&lt;p&gt;There were 2&amp;nbsp;changes&lt;/p&gt;&lt;ul&gt;&lt;li&gt;new hardware&lt;/li&gt;&lt;li&gt;new office&lt;/li&gt;&lt;/ul&gt;</content>
+        </answer>
+      </rQuestion>
+      <rQuestion id="118" answerType="Text" answerSubType="" order="2">
+        <wording>Personnel changes?</wording>
+        <description>Describe any changes in professional personnel of the Sub-Adviser who perform services for the Funds</description>
+        <answer>
+          <content>&lt;p&gt;No personnel changes in the last 12 months&lt;/p&gt;</content>
+        </answer>
+      </rQuestion>
+    </fQuestion>
+    <fQuestion id="42" order="2">
+      <wording>Has there been any material changes in the Sub-Adviser’s principal business activities?</wording>
+      <answer>
+        <content>1</content>
+      </answer>
+      <rQuestion id="119" answerType="Table" answerSubType="Standard Table" order="1">
+        <wording>Describe any material changes in the Sub-Adviser’s activities</wording>
+        <description></description>
+        <answer>
+          <content></content>
+          <answerDataExtended order="1">
+            <wording>US</wording>
+            <description></description>
+            <content>from 100 to 333</content>
+          </answerDataExtended>
+          <answerDataExtended order="1">
+            <wording>China</wording>
+            <description></description>
+            <content>from 20 to 40</content>
+          </answerDataExtended>
+          <answerDataExtended order="1">
+            <wording>ROW</wording>
+            <description></description>
+            <content>from 400 to 380</content>
+          </answerDataExtended>
+        </answer>
+      </rQuestion>
+    </fQuestion>
+    <rQuestion id="120" answerType="Text" answerSubType="" order="1">
+      <wording>What actions where taken to implement security?</wording>
+      <description>Describe all events and activities that took place in the past 12 months</description>
+      <answer>
+        <content>&lt;table border=&quot;1&quot; cellpadding=&quot;1&quot; cellspacing=&quot;1&quot;&gt;&lt;thead&gt;&lt;tr&gt;&lt;th scope=&quot;col&quot;&gt;hardware&lt;/th&gt;&lt;th scope=&quot;col&quot;&gt;software&lt;/th&gt;&lt;/tr&gt;&lt;/thead&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;brand new server&lt;/td&gt;&lt;td&gt;all security patchs applyed&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;upgrade VPN gateway&lt;/td&gt;&lt;td&gt;&amp;nbsp;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;</content>
+      </answer>
+    </rQuestion>
+    <rQuestion id="121" answerType="Text" answerSubType="" order="2">
+      <wording>Has there been any fiscal auditing?</wording>
+      <description>Enumerate all is any</description>
+      <answer>
+        <content>&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:#f39c12&quot;&gt;First by Auditor ABC&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;&lt;p&gt;&lt;strong&gt;&lt;span style=&quot;color:#16a085&quot;&gt;Second by Auditor ACME&lt;/span&gt;&lt;/strong&gt;&lt;/p&gt;</content>
+      </answer>
+    </rQuestion>
+  </section>
+  <section id="29" name="Investment Advisory Services to the Funds">
+    <rQuestion id="122" answerType="Table" answerSubType="Standard Table" order="1">
+      <wording>Have any material changes in the investment advisery services provided by the Sub-Adviser to the Funds since the last renewal (or approval) of the Agreements occurred?</wording>
+      <description>List all</description>
+      <answer>
+        <content></content>
+        <answerDataExtended order="1">
+          <wording>In Q1</wording>
+          <description></description>
+          <content>In terms of the time period that your responses should cover, please refer to the instructions for each item and, at a minimum, cover any period that followed the period(s) covered in your last questionnaire (i.e., since the most recent approval/renewal of your Agreements) so as to avoid any “gaps” in the information covered in consecutive renewals.</content>
+        </answerDataExtended>
+        <answerDataExtended order="1">
+          <wording>in Q2</wording>
+          <description></description>
+          <content>Please give complete answers to all questions. Cross-referencing your Form ADV, Compliance Manual, or other documents will NOT be a sufficient response. Providing complete answers will reduce or eliminate the need for follow-up questions.</content>
+        </answerDataExtended>
+      </answer>
+    </rQuestion>
+    <rQuestion id="123" answerType="Text" answerSubType="" order="2">
+      <wording>Some random text question?</wording>
+      <description>no description</description>
+      <answer>
+        <content></content>
+      </answer>
+    </rQuestion>
+  </section>
+</document>
