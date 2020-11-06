@@ -12,7 +12,7 @@ namespace com.truewindglobal.aspose
         public static void ApplyLicence()
         {
             License license = new License();
-            license.SetLicense(@"Aspose.Words.lic");
+            license.SetLicense(@"Aspose.Total.NET.lic");
         }
 
     }

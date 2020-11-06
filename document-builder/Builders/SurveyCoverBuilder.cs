@@ -1,5 +1,6 @@
 ﻿using Aspose.Words;
 using Aspose.Words.Drawing;
+using com.truewindglobal.aspose.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,7 +22,7 @@ namespace com.truewindglobal.aspose.Builders
                 Console.WriteLine(ele);
 #endif
                 builder.Document.RemoveAllChildren();
-                
+
                 Section section = new Section(builder.Document);
                 builder.Document.AppendChild(section);
 
@@ -35,30 +36,34 @@ namespace com.truewindglobal.aspose.Builders
                 Paragraph titleParagraph = new Paragraph(builder.Document);
                 body.AppendChild(titleParagraph);
 
-                titleParagraph.ParagraphFormat.StyleName = "Title";
-                titleParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                titleParagraph.ParagraphFormat.StyleName = "MyTitleStyle";
+                //titleParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
 
                 // Title
-                Run titleRun = new Run(builder.Document);
-                titleRun.Text = "Questionnaire Export" + ControlChar.CrLf + ControlChar.CrLf;
-                titleRun.Font.Color = Color.Black;
-                titleRun.Font.Size = 44;
-                titleRun.Font.Name = "Whitney HTF";
+                Run titleRun = new Run(builder.Document)
+                {
+                    Text = ControlChar.CrLf + 
+                           ControlChar.CrLf + 
+                           "Questionnaire Export" + 
+                           ControlChar.CrLf +
+                           ControlChar.CrLf + 
+                           ControlChar.CrLf + 
+                           ControlChar.CrLf + 
+                           ControlChar.CrLf
+                };
+                //titleRun.Font.Color = Color.Black;
+                //titleRun.Font.Size = 44;
+                //titleRun.Font.Name = "Whitney HTF";
                 titleParagraph.AppendChild(titleRun);
 
                 // Logo
-                var logo = new Shape(builder.Document, ShapeType.Rectangle);
-
-                logo.Width = 460;
-                logo.Height = 60;
-
-                logo.FillColor = Color.LightGray;
-                logo.RelativeHorizontalPosition = RelativeHorizontalPosition.Page;
-                logo.RelativeVerticalPosition = RelativeVerticalPosition.Page;
+                Shape logo = builder.InsertImage(GlobalProperties.logo, width:71, height:35);
                 logo.WrapType = WrapType.None;
-                logo.Stroked = false;
-                logo.Top = 140;
+                logo.RelativeHorizontalPosition = RelativeHorizontalPosition.Margin;
                 logo.HorizontalAlignment = HorizontalAlignment.Center;
+                logo.RelativeVerticalPosition = RelativeVerticalPosition.Paragraph;
+                logo.Top = 30;
+
                 titleParagraph.AppendChild(logo);
 
                 // Subtitle
@@ -68,7 +73,7 @@ namespace com.truewindglobal.aspose.Builders
                 subTitleParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
 
                 Run subTitleRun = new Run(builder.Document);
-                subTitleRun.Text = "Second full process test Sept 3rd";
+                subTitleRun.Text = ele.Element("name").Value;
                 subTitleRun.Font.Color = Color.Black;
                 subTitleRun.Font.Size = 20;
                 subTitleRun.Font.Name = "Whitney HTF Semi";
@@ -81,14 +86,16 @@ namespace com.truewindglobal.aspose.Builders
                 adviserNameParagraph.ParagraphFormat.StyleName = "Subtitle";
                 adviserNameParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
 
-                Run adviserNameRun = new Run(builder.Document);
-                adviserNameRun.Text = "Arcadian Asset Management LLC";
+                Run adviserNameRun = new Run(builder.Document)
+                {
+                    Text = ele.Element("adviserName").Value
+                };
                 adviserNameRun.Font.Color = Color.Gray;
                 adviserNameRun.Font.Size = 20;
                 subTitleRun.Font.Name = "Whitney HTF Semi";
                 adviserNameParagraph.AppendChild(adviserNameRun);
-                body.AppendChild(adviserNameParagraph);
 
+                body.AppendChild(adviserNameParagraph);
             }
 
         }

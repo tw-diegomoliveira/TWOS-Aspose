@@ -29,18 +29,41 @@ namespace com.truewindglobal.aspose.Builders
             section.AppendChild(body);
 
             Paragraph para = new Paragraph(builder.Document);
+            //Style paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MyTitleStyle");
+            //paraStyle.Font.Bold = true;
+            //paraStyle.Font.Size = 28;
+            //paraStyle.Font.Name = GlobalProperties.FontName;
+            //paraStyle.ParagraphFormat.Alignment = ParagraphAlignment.Left;
             body.AppendChild(para);
 
             // We can set some formatting for the paragraph
-            para.ParagraphFormat.StyleName = "Title";
-            para.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+            para.ParagraphFormat.StyleName = "MyHeading1Style";
+            //para.ParagraphFormat.Alignment = ParagraphAlignment.Left;
 
-            Run runId = new Run(builder.Document);
-            Run runName = new Run(builder.Document);
-            runId.Text = element.Attribute("id").Value;
-            para.AppendChild(runId);
-            runName.Text = element.Attribute("name").Value;
-            para.AppendChild(runName);
+            Run run = new Run(builder.Document)
+            {
+                Text = "Section " + element.Attribute("id").Value
+            };
+            para.AppendChild(run);
+
+            para = new Paragraph(builder.Document);
+            //paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MyNormalStyle");
+            //paraStyle.Font.Bold = false;
+            //paraStyle.Font.Size = GlobalProperties.FontSize;
+            //paraStyle.Font.Name = GlobalProperties.FontName;
+            //paraStyle.ParagraphFormat.Alignment = ParagraphAlignment.Left;
+            
+            para.ParagraphFormat.StyleName = "MyNormalStyle";
+            //para.ParagraphFormat.Alignment = ParagraphAlignment.Left;
+            body.AppendChild(para);
+
+            run = new Run(builder.Document)
+            {
+                Text = element.Attribute("name").Value
+            };
+            para.AppendChild(run);
+            builder.MoveToDocumentEnd();
+            builder.Writeln();
         }
     }
 }

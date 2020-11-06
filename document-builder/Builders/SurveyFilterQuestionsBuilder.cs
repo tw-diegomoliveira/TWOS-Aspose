@@ -21,12 +21,15 @@ namespace com.truewindglobal.aspose.Builders
                 Console.WriteLine(ele.Element("answer").Element("content").Value);
 #endif
                 Paragraph para = new Paragraph(builder.Document);
+                para.ParagraphFormat.StyleName = "MyNormalStyle";
                 builder.Document.LastSection.Body.AppendChild(para);
 
                 Run run = new Run(builder.Document);
                 run.Text = ele.Element("wording").Value;
                 para.AppendChild(run);
 
+                //builder.CurrentParagraph. = para;
+                builder.MoveTo(builder.Document.LastSection.Body.LastParagraph);
                 builder.Writeln(ele.Element("answer").Element("content").Value);
 
                 //Awnsers

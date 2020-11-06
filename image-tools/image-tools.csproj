@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{81398F76-85F5-4ED2-9F3A-557F0DC4E453}</ProjectGuid>
+    <ProjectGuid>{56183640-65AE-4887-8B7A-FFBB36546487}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>document_builder</RootNamespace>
-    <AssemblyName>document-builder</AssemblyName>
+    <RootNamespace>image_tools</RootNamespace>
+    <AssemblyName>image-tools</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -33,15 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Aspose.Words, Version=20.10.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <HintPath>..\packages\Aspose.Words.20.10.0\lib\net461\Aspose.Words.dll</HintPath>
-    </Reference>
-    <Reference Include="Aspose.Words.Pdf2Word, Version=20.10.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <HintPath>..\packages\Aspose.Words.20.10.0\lib\net461\Aspose.Words.Pdf2Word.dll</HintPath>
+    <Reference Include="Aspose.Imaging, Version=20.9.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>..\packages\Aspose.Imaging.20.9.0\lib\net40\Aspose.Imaging.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,26 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\HeaderAndFooterBuilder.cs" />
-    <Compile Include="Builders\SurveyCoverBuilder.cs" />
-    <Compile Include="Builders\SurveyFilterQuestionsBuilder.cs" />
-    <Compile Include="Builders\SurveyInstructionsBuilder.cs" />
-    <Compile Include="Builders\SurveyRegularQuestionsBuilder.cs" />
-    <Compile Include="Builders\SurveySectionsBuilder.cs" />
-    <Compile Include="DocumentExport.cs" />
-    <Compile Include="GlobalProperties.cs" />
-    <Compile Include="HelperMethods.cs" />
-    <Compile Include="Models\QuestionnaireHeader.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XpathExtensionClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EmbeddedResource Include="Aspose.Total.NET.lic" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

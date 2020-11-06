@@ -8,16 +8,19 @@ namespace com.truewindglobal.aspose
 {
     class GlobalProperties
     {
-        /// <summary>
-        /// Global properties for the project
-        /// 
+        /// <summary> 
+        /// Global properties for the project 
         /// </summary>
 
-        //File information
-        public static string Filename => @"C:\AsposeWordsDemo\Questionnaire_ii.docx";
+        //Word Document
+        public static string outDoc => @"C:\AsposeWordsDemo\Questionnaire_iii.docx";
 
-        //Data information
-        public static string XMLfile => @"C:\AsposeWordsDemo\FSdata.xml";
+        //XML Data information
+        public static string xmlFile => @"C:\AsposeWordsDemo\FSdata2.xml";
+        public static string stylesDoc => @"C:\AsposeWordsDemo\Styles.docx";
+
+        // Logo
+        public static string logo => @"C:\AsposeWordsDemo\logo.png";
 
 
         /// <summary>
