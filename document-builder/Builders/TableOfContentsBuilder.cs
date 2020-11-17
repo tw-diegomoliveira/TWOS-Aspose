@@ -2,28 +2,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace com.truewindglobal.aspose.Builders
 {
-    public class SurveyInstructionsBuilder
+    public class TableOfContentsBuilder
     {
-        public static void Build(DocumentBuilder builder, IEnumerable<XElement> query)
+        public static void Build(DocumentBuilder builder)
         {
             builder.MoveToDocumentEnd();
             builder.InsertBreak(BreakType.SectionBreakNewPage);
 
             builder.ParagraphFormat.StyleName = "qTitle";
-            builder.Writeln("INSTRUCTIONS");
+            builder.Writeln("INDEX");
             builder.Writeln();
-
-            foreach (var ele in query)
-            {
-                builder.ParagraphFormat.StyleName = "qInstruction";
-                builder.Writeln(ele.Element("text").Value);
-            }
+            builder.InsertTableOfContents("\\o \"1-1\" \\h \\z \\u");
+            builder.Document.Styles[StyleIdentifier.Toc1].Font.Name = GlobalProperties.FontName;
         }
     }
 }

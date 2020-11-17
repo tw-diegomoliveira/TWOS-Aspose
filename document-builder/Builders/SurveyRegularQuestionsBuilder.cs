@@ -1,8 +1,10 @@
 ﻿using Aspose.Words;
+using Aspose.Words.Lists;
 using Aspose.Words.Tables;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,97 +14,352 @@ namespace com.truewindglobal.aspose.Builders
 {
     public class SurveyRegularQuestionsBuilder
     {
-        public static void Build(DocumentBuilder builder, IEnumerable<XElement> query)
+        public static void Build(DocumentBuilder builder, IEnumerable<XElement> query, bool isConnectedQuestion, List list)
         {
-            foreach (var ele in query)
+            var style = @"<style>body { font-family:Tahoma !important }</style>";
+            foreach (var e in query)
             {
-                var qId = ele.Attribute("id").Value;
-                var qType = ele.Attribute("answerType").Value;
-                var qSubtypeType = ele.Attribute("answerSubType").Value;
-#if false
-                Console.WriteLine("\t" + ele.Element("wording").Value);
-                Console.WriteLine("\t" + ele.Element("description").Value);
-#endif
-                //Body body = new Body(builder.Document);              
-                //Paragraph para = new Paragraph(builder.Document);
-                //body.AppendChild(para);
+                var qId = e.Attribute("id").Value;
+                var qType = e.Attribute("answerType").Value;
+                var qSubtypeType = e.Attribute("answerSubType").Value;
 
-                //Run run = new Run(builder.Document);
-                //run.Text = ele.Element("wording").Value;
-                //para.AppendChild(run);
-                builder.Writeln(ele.Element("wording").Value);
-                //builder.Writeln(ele.Element("answer").Element("content").Value);
-
-                //section.AppendChild(para);
-
-                //builder.Writeln(ele.Element("answer").Element("content").Value);
-                var style = @"<style>body { font-family:Whitney HTF Book !important; }</style>";
-
+                builder.MoveToDocumentEnd();
+                builder.InsertStyleSeparator();
                 switch (qType)
                 {
-                    
+
+                //builder.InsertHtml(style + e.Element("answer").Element("content").Value);
+                //builder.InsertStyleSeparator();
                     case "Text":
-                        //Console.WriteLine("\t\t\t" + ele.Element("answer").Element("content").Value);
-                        builder.InsertHtml(style + ele.Element("answer").Element("content").Value);
+                        builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
+                        builder.ListFormat.List = list;
+                        builder.Writeln(e.Element("wording").Value);
+                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.List = null;
+                        builder.ParagraphFormat.StyleName = "qDescription";
+                        builder.ParagraphFormat.OutlineLevel = OutlineLevel.Level4;
+                        builder.Writeln("\t" + e.Element("description").Value);
+                        builder.ParagraphFormat.StyleName = "qNormal";
+                        builder.ParagraphFormat.OutlineLevel = OutlineLevel.Level4;
+                        builder.InsertHtml(style + e.Element("answer").Element("content").Value);
                         break;
+
                     case "Yes/No":
-                        //Console.WriteLine("\t\t\t" + ele.Element("answer").Element("content").Value);
-                        builder.InsertHtml(style + ele.Element("answer").Element("content").Value);
+                        builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
+                        builder.ListFormat.List = list; 
+                        builder.Write(e.Element("wording").Value + "\n");
+                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.List = null;
+                        builder.ParagraphFormat.StyleName = "qDescription";
+                        builder.Writeln(e.Element("description").Value);
+                        builder.ParagraphFormat.StyleName = "qNormal";
+                        builder.Writeln("\t" + e.Element("answer").Element("content").Value);
+                        builder.ListFormat.RemoveNumbers();
                         break;
 
                     case "Upload":
-                        builder.InsertHtml(style + "<p>Upload type</p>");
+                        builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
+                        builder.ListFormat.List = list;
+                        builder.Writeln(e.Element("wording").Value);
+                        builder.ListFormat.RemoveNumbers();
+                        //builder.Writeln(e.Element("answer").Element("content").Value);
+                        builder.Writeln();
+                        var qu = e.GetElementsUsingXPath("//self::rQuestion[@answerType='Upload']/answer/binaryData");
+                        foreach (var q in qu)
+                        {
+                            builder.ParagraphFormat.StyleName = "qHeading 4";
+                            builder.Writeln(q.Attribute("name").Value);
+                        }
                         break;
+
                     case "Grouped":
-                        //"//section[@id=11]/rQuestion[@answerType="Grouped"]/answer/answerDataExtended"
-                        builder.InsertHtml(style + "<p>Grouped type</p>");
+                        builder.MoveToDocumentEnd();
+                        builder.InsertStyleSeparator();
+                        builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
+                        builder.ListFormat.List = list;
+                        builder.Writeln(e.Element("wording").Value);
+                        builder.ListFormat.RemoveNumbers();
+                        builder.ListFormat.List = null;
+
+                        builder.ParagraphFormat.StyleName = "qDescription";
+                        builder.Writeln(e.Element("description").Value);
+
+                        var grouped = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Grouped']/answer/answerDataExtended");
+
+                        List newList = builder.Document.Lists.Add(ListTemplate.NumberLowercaseLetterParenthesis);
+                        newList.ListLevels[0].StartAt = 1;
+                        builder.ListFormat.ListLevelNumber = 2;
+                        //builder.InsertStyleSeparator();
+                        //builder.ListFormat.List = newList;
+
+                        foreach (var t in grouped)
+                        {
+                            switch (t.Element("answerType").Value)
+                            {
+                                case "Yes/No":
+                                    builder.ParagraphFormat.StyleName = "qHeading 4";
+                                    builder.ListFormat.List = newList;
+                                    builder.ListFormat.ListLevelNumber = 2;
+                                    builder.Writeln(t.Element("wording").Value);
+                                    builder.ListFormat.RemoveNumbers();
+                                    //builder.ListFormat.List = null;
+                                    builder.Writeln(t.Element("content").Value);
+                                    break;
+                                case "Upload":
+                                    builder.InsertHtml(style + t.Element("wording").Value);
+                                    builder.Writeln();
+                                    builder.InsertHtml(style + t.Element("binaryData").Attribute("name").Value);
+                                    //builder.InsertHtml(style + "<p>Upload</p>");
+                                    builder.Writeln();
+                                    break;
+                                case "Text":
+                                    builder.ParagraphFormat.StyleName = "qHeading 4";
+                                    builder.ListFormat.List = newList;
+                                    builder.ListFormat.ListLevelNumber = 2;
+                                    builder.Writeln(t.Element("wording").Value);
+                                    builder.ListFormat.RemoveNumbers();
+                                    //builder.ListFormat.List = null;
+                                    builder.Writeln();
+                                    builder.ParagraphFormat.StyleName = "qNormal";
+                                    builder.InsertHtml(style + t.Element("content").Value);
+                                    builder.Writeln();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         break;
                     case "Table":
-                        if (qSubtypeType == "Standard Table")
+                        builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
+                        builder.ListFormat.List = list;
+                        builder.Writeln(e.Element("wording").Value);
+                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.List = null;
+                        builder.ParagraphFormat.StyleName = "qDescription";
+                        builder.ParagraphFormat.OutlineLevel = OutlineLevel.Level4;
+                        builder.Writeln("\t" + e.Element("description").Value);
+                        builder.ParagraphFormat.StyleName = "qNormal";
+
+                        if (e.Element("answer").Element("content").Value == "")
                         {
-                            //cols(header) -> "//self::rQuestion[@id=119][@answerType='Table']/answer/answerDataExtended[@order=1]/wording"
-                            //rows(content) -> "//self::rQuestion[@id=119][@answerType='Table']/answer/answerDataExtended[@order=1]/content"
-                            var qc = ele.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table']/answer/answerDataExtended[@order=1]/wording");
-                            var qr = ele.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table']/answer/answerDataExtended[@order=1]/content");
-                            
-                            builder.StartTable();
-                            foreach (var e in qc)
+                            if (e.Element("answer").Element("binaryData").Attribute("name").Value == "")
                             {
-                                builder.InsertCell();
-                                // Some special features for the header row.
-                                builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
-                                builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                if (qSubtypeType == "Standard Table")
+                                {
+                                    //cols(header) -> "//self::rQuestion[@id=119][@answerType='Table']/answer/answerDataExtended[@order=1]/wording"
+                                    //rows(content) -> "//self::rQuestion[@id=119][@answerType='Table']/answer/answerDataExtended[@order=1]/content"
+                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table']/answer/answerDataExtended[@order=1]/wording");
+                                    var count = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Standard Table']/answer/answerDataExtended/content");
 
-                                builder.Write(e.Value);
+                                    builder.StartTable();
+                                    var cols = 0;
+                                    var rows = 0;
+                                    foreach (var ee in qc)
+                                    {
+                                        cols += 1;
+                                        builder.InsertCell();
+                                        // Some special features for the header row.
+                                        builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                        builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+
+                                        builder.Write(ee.Value);
+                                    }
+                                    builder.EndRow();
+                                    rows = count.Count() / cols;
+                                    for (int i = 1; i <= rows; i++)
+                                    {
+                                        var qr = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table']/answer/answerDataExtended[@order=" + i + "]/content");
+                                        foreach (var ee in qr)
+                                        {
+                                            // Set features for the other rows and cells.
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
+                                            builder.CellFormat.Width = 100.0;
+                                            builder.CellFormat.VerticalAlignment = CellVerticalAlignment.Center;
+
+                                            // Reset height and define a different height rule for table body
+                                            builder.RowFormat.Height = 30.0;
+                                            builder.RowFormat.HeightRule = HeightRule.Auto;
+
+                                            builder.InsertCell();
+                                            builder.Write(ee.Value);
+                                        }
+                                        builder.EndRow();
+                                    }
+                                    builder.EndTable();
+                                }
+                                if (qSubtypeType == "Fund as Columns")
+                                {
+                                    //cols ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended/gName"
+                                    //rows ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended[@order=1]/wording"
+                                    //content ->
+                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended/gName");
+                                    var qq = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended[@order=1]/wording");
+                                    var qr = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended/content");
+                                    builder.StartTable();
+                                    builder.InsertCell();
+                                    builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+
+                                    var i = 1;
+                                    foreach (var ee in qc)
+                                    {
+                                        if (i % 2 != 0)
+                                        {
+                                            // Some special features for the header row.
+                                            builder.InsertCell();
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+
+                                            builder.Write(ee.Value);
+                                        }
+                                        i += 1;
+                                    }
+                                    builder.EndRow();
+                                    var j = 1;
+                                    foreach (var ee in qq)
+                                    {
+                                        builder.InsertCell();
+                                        builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                        builder.Write(ee.Value);
+                                        foreach (var eee in qr)
+                                        {
+                                            if (j % 2 != 0)
+                                            {
+                                                builder.InsertCell();
+                                                builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
+                                                builder.Write(eee.Value);
+                                            }
+                                            j += 1;
+                                        }
+                                        builder.EndRow();
+                                    }
+                                    builder.EndTable();
+                                }
+                                if (qSubtypeType == "Fund as Rows")
+                                {
+                                    //cols ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended[@order=1]/wording"
+                                    //rows ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Columns']/answer/answerDataExtended/gName"
+                                    //content ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Rows']/answer/answerDataExtended[@order=1]/content"
+                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Rows']/answer/answerDataExtended[@order=1]/wording");
+                                    var qq = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Rows']/answer/answerDataExtended/gName");
+                                    builder.StartTable();
+                                    builder.InsertCell();
+                                    builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+
+                                    foreach (var ee in qc)
+                                    {
+                                        // Some special features for the header row.
+                                        builder.InsertCell();
+                                        builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                        builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+
+                                        builder.Write(ee.Value);
+                                    }
+                                    builder.EndRow();
+
+                                    var i = 1;
+                                    var j = 1;
+                                    foreach (var ee in qq)
+                                    {
+                                        if (i % 2 != 0)
+                                        {
+                                            builder.InsertCell();
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.Write(ee.Value);
+                                            var qr = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Rows']/answer/answerDataExtended[@order=" + j + "]/content");
+                                            foreach (var eee in qr)
+                                            {
+                                                //if (j % 2 != 0)
+                                                //{
+                                                builder.InsertCell();
+                                                builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
+                                                builder.Write(eee.Value);
+                                                //}
+                                                //j += 1;
+                                            }
+                                            builder.EndRow();
+                                            j += 1;
+                                        }
+                                        i += 1;
+                                    }
+                                    builder.EndTable();
+                                }
+                                if (qSubtypeType == "Fund as Title")
+                                {
+                                    //cols ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/gName"
+                                    //rows ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1]/wording"
+                                    //content ->
+                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/gName");
+                                    var qq = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1]/wording");
+                                    var qr = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/content");
+                                    //builder.InsertCell();
+                                    //builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+
+                                    var i = 1;
+                                    foreach (var ee in qc)
+                                    {
+                                        builder.StartTable();
+                                        if (i % 2 != 0)
+                                        {
+                                            // Some special features for the header row.
+                                            builder.InsertCell();
+                                            builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                            builder.Write(ee.Value);
+                                            for (int c = 0; c < 2; c++)
+                                            {
+                                                builder.InsertCell();
+                                                builder.CellFormat.HorizontalMerge = CellMerge.Previous;
+                                            }
+                                            builder.EndRow();
+
+                                        }
+                                        i += 1;
+                                        builder.EndTable();
+                                    }
+
+                                    //var j = 1;
+                                    //foreach (var e in qq)
+                                    //{
+                                    //    builder.InsertCell();
+                                    //    builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                    //    builder.Write(e.Value);
+                                    //    foreach (var ee in qr)
+                                    //    {
+                                    //        if (j % 2 != 0)
+                                    //        {
+                                    //            builder.InsertCell();
+                                    //            builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
+                                    //            builder.Write(ee.Value);
+                                    //        }
+                                    //        j += 1;
+                                    //    }
+                                    //    builder.EndRow();
+                                    //    builder.EndTable();
+                                    //}
+
+                                }
+                                if (qSubtypeType == "Ranking Table")
+                                {
+                                    builder.InsertHtml(style + "<p>Ranking Table</p>");
+                                    builder.InsertHtml(style + "<p>Not yet Implemented</p>");
+                                }
                             }
-                            builder.EndRow();
-                            
-                            foreach (var e in qr)
+                            else
                             {
-                                // Set features for the other rows and cells.
-                                builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
-                                builder.CellFormat.Width = 100.0;
-                                builder.CellFormat.VerticalAlignment = CellVerticalAlignment.Center;
-
-                                // Reset height and define a different height rule for table body
-                                builder.RowFormat.Height = 30.0;
-                                builder.RowFormat.HeightRule = HeightRule.Auto;
-
-                                builder.InsertCell();
-                                builder.Write(e.Value);
+                                builder.InsertHtml(style + e.Element("answer").Element("binaryData").Attribute("name").Value);
                             }
-                            builder.EndRow();
-                            builder.EndTable();
                         }
-                        builder.InsertHtml(style + "<p>Table type</p>");
+                        else
+                        {
+                            builder.InsertHtml(style + e.Element("answer").Element("content").Value);
+                        }
                         break;
+
                     default:
                         break;
                 }
-                    
-                //get answers
             }
-
         }
     }
 }

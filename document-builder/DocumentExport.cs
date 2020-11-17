@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Aspose.Words;
-using Aspose.Words.Drawing;
-using Aspose.Words.Saving;
-using com.truewindglobal.aspose;
+using Aspose.Words.Fonts;
+using Aspose.Words.Lists;
 using com.truewindglobal.aspose.Builders;
-using com.truewindglobal.aspose.Models;
 
 namespace com.truewindglobal.aspose
 {
@@ -27,6 +19,18 @@ namespace com.truewindglobal.aspose
             var stylesDoc = new Document(GlobalProperties.stylesDoc);
             var builder = new DocumentBuilder(doc);
 
+            List sectionList = doc.Lists.AddCopy(stylesDoc.Lists[5]);
+            sectionList.IsRestartAtEachSection = false;
+
+            List lvlOneList = doc.Lists.Add(ListTemplate.NumberArabicDot);
+            lvlOneList.IsRestartAtEachSection = true;
+
+            List lvlTwoList = doc.Lists.Add(ListTemplate.NumberLowercaseLetterParenthesis);
+            lvlTwoList.IsRestartAtEachSection = true;
+
+            HelperMethods.CopyStyles(stylesDoc, doc);
+
+
             // Loads the entire XML data file
             var xmlData = XElement.Load(GlobalProperties.xmlFile);
 
@@ -41,6 +45,11 @@ namespace com.truewindglobal.aspose
             /// </summary>
             SurveyCoverBuilder.Build(builder, query);
 
+            ///<summary>
+            /// Insert TOC
+            /// </summary>
+            TableOfContentsBuilder.Build(builder);
+
             //extract Instructions data
             query = xmlData.GetElementsUsingXPath("//self::instruction");
 
@@ -53,45 +62,73 @@ namespace com.truewindglobal.aspose
             query = xmlData.GetElementsUsingXPath("//self::document/section");
 
             //Loop thru the section
+            var i = 1;
             foreach (var ele in query)
             {
-                var id = ele.Attribute("id").Value;
+                //var id = ;
                 SurveySectionsBuilder.Build(builder, ele);
 
-                //extract filter
-                var q = ele.GetElementsUsingXPath("//self::section[@id='"+ id +"']/fQuestion");
-                //create filter
-                SurveyFilterQuestionsBuilder.Build(builder, q);
+                if (i > 1)
+                {
+                    //extract filter
+                    var q = ele.GetElementsUsingXPath("//self::section[@id='" + ele.Attribute("id").Value + "']/fQuestion");
+                    // creates a new list
+                    List newList = builder.Document.Lists.Add(ListTemplate.NumberArabicDot);
+                    newList.ListLevels[0].StartAt = 1;
+                    builder.ListFormat.ListLevelNumber = 2;
+                    //create filter
+                    SurveyFilterQuestionsBuilder.Build(builder, q, i, newList);
 
-                //extract regular
-                q = ele.GetElementsUsingXPath("//section[@id='" + id + "']/rQuestion");
-                //create regular
-                builder.MoveToDocumentEnd();
-                builder.Writeln();
-                SurveyRegularQuestionsBuilder.Build(builder, q);
+                    //extract regular
+                    q = ele.GetElementsUsingXPath("//section[@id='" + ele.Attribute("id").Value + "']/rQuestion");
+                    //create regular
+                    //builder.MoveToDocumentEnd();
+                    //builder.Writeln();
+                    SurveyRegularQuestionsBuilder.Build(builder, q, false, newList);
+                }
+                else
+                {
+                    //extract filter
+                    var q = ele.GetElementsUsingXPath("//self::section[@id='" + ele.Attribute("id").Value + "']/fQuestion");
+                    SurveyFilterQuestionsBuilder.Build(builder, q, i, lvlOneList);
+                    //extract regular
+                    q = ele.GetElementsUsingXPath("//section[@id='" + ele.Attribute("id").Value + "']/rQuestion");
+                    //create regular
+                    //builder.MoveToDocumentEnd();
+                    //builder.Writeln();
+                    SurveyRegularQuestionsBuilder.Build(builder, q, false, lvlOneList);
+                }
+
+                i += 1;
             }
 
             // Setup Header and Footer
             HeaderAndFooterBuilder.Build(builder);
 
             //Set TOC
+            //TableOfContentsBuilder.Build(builder);
+            builder.Document.UpdateFields();
 
             /// <summary>
             /// Creates/Saves document the extension will provide the format.
             /// </summary>
+            FontInfoCollection fontInfos = doc.FontInfos;
+            fontInfos.EmbedTrueTypeFonts = true;
+            fontInfos.EmbedSystemFonts = false;
+            fontInfos.SaveSubsetFonts = false;
             doc.Save(GlobalProperties.outDoc);
-            Console.ReadLine();
+            //Console.ReadLine();
 
         }
         private static void DocumentIniSettings(DocumentBuilder builder)
         {
             builder.Font.Name = GlobalProperties.FontName;
             builder.Font.Size = GlobalProperties.FontSize;
-            
+
             /// <summary>
             /// Custom styles for the all document
             /// </summary>
-            
+#if false
             //Title
             Style paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MyTitleStyle");
             paraStyle.Font.Bold = true;
@@ -118,6 +155,7 @@ namespace com.truewindglobal.aspose
             styles.DefaultFont.Name = "Whitney HTF Book";
             styles.DefaultFont.Size = 12;
             styles.Add(StyleType.Paragraph, "MyNormalStyle");
+#endif
         }
     }
 }

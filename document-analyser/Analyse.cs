@@ -16,11 +16,20 @@ namespace document_analyser
         static void Main()
         {
             HelperMethods.ApplyLicence();
-            Document doc = new Document(@"C:\AsposeWordsDemo\Styles.docx");
+            Document doc = new Document(@"C:\AsposeWordsDemo\Styles_Questionnaire_v1.0.docx");
             DocumentBuilder builder = new DocumentBuilder(doc);
 
-            string properties = HelperMethods.GetAllDocumentProperties(builder);
+            //string properties = HelperMethods.GetAllDocumentProperties(builder);
+            var i = 0;
+            foreach (Shape img in doc.GetChildNodes(NodeType.Shape, true))
+            {
+                i += 1;
+                Shape imported = (Shape)doc.ImportNode(img, true);
+                Console.WriteLine(i);
+                //doc.FirstSection.Body.FirstParagraph.AppendChild(imported);
 
+            }
+#if false
             MemoryStream outStream = new MemoryStream();
             ImageSaveOptions imageSaveOptions = new ImageSaveOptions(SaveFormat.Jpeg);
             PageRange pageRange = new PageRange(0, doc.PageCount - 1);
@@ -38,10 +47,23 @@ namespace document_analyser
             //imageSaveOptions.PageSavingCallback = handler;
 
             doc.Save(outStream, imageSaveOptions);
-
+#endif
             //Console.WriteLine(outStream.ToArray());
 
-            Console.WriteLine(properties);
+            //Console.WriteLine(properties);
+#if false
+            using (IEnumerator<Style> stylesEnum = doc.Styles.GetEnumerator())
+            {
+                while (stylesEnum.MoveNext())
+                {
+                    Style curStyle = stylesEnum.Current;
+                    Console.WriteLine($"Style name:\t\"{curStyle.Name}\", of type \"{curStyle.Type}\"");
+                    Console.WriteLine($"\tSubsequent style:\t{curStyle.NextParagraphStyleName}");
+                    Console.WriteLine($"\tIs heading:\t\t\t{curStyle.IsHeading}");
+                    Console.WriteLine($"\tIs QuickStyle:\t\t{curStyle.IsQuickStyle}");
+                }
+            }
+#endif
             Console.ReadLine();
         }
 

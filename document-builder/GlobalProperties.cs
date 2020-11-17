@@ -13,11 +13,11 @@ namespace com.truewindglobal.aspose
         /// </summary>
 
         //Word Document
-        public static string outDoc => @"C:\AsposeWordsDemo\Questionnaire_iii.docx";
+        public static string outDoc => @"C:\AsposeWordsDemo\Questionnaire_iv.docx";
 
         //XML Data information
         public static string xmlFile => @"C:\AsposeWordsDemo\FSdata2.xml";
-        public static string stylesDoc => @"C:\AsposeWordsDemo\Styles.docx";
+        public static string stylesDoc => @"C:\AsposeWordsDemo\Styles_Questionnaire_v2.4.docx";
 
         // Logo
         public static string logo => @"C:\AsposeWordsDemo\logo.png";
@@ -27,7 +27,7 @@ namespace com.truewindglobal.aspose
         /// Global Properties for the Exported document
         /// </summary>
         // Global Font properties
-        public static string FontName => "Whitney HTF";
+        public static string FontName => "Tahoma";
         public static int FontSize => 14;
     }
 }

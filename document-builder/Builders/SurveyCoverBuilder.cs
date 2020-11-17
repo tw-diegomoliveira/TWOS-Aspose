@@ -1,6 +1,7 @@
 ﻿using Aspose.Words;
 using Aspose.Words.Drawing;
 using com.truewindglobal.aspose.Models;
+using document_builder.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,87 +16,37 @@ namespace com.truewindglobal.aspose.Builders
     {
         public static void Build(DocumentBuilder builder, IEnumerable<XElement> query)
         {
+            //builder.Document.RemoveAllChildren();
+            //builder.MoveToDocumentEnd();
+            //builder.InsertBreak(BreakType.SectionBreakNewPage);
+            builder.InsertStyleSeparator();
+
             foreach (var ele in query)
             {
-#if debug
-                Console.WriteLine("COVER");
-                Console.WriteLine(ele);
-#endif
-                builder.Document.RemoveAllChildren();
-
-                Section section = new Section(builder.Document);
-                builder.Document.AppendChild(section);
-
-                // Set some properties for the section
-                section.PageSetup.SectionStart = SectionStart.NewPage;
-                section.PageSetup.PaperSize = PaperSize.Letter;
-
-                Body body = new Body(builder.Document);
-                section.AppendChild(body);
-
-                Paragraph titleParagraph = new Paragraph(builder.Document);
-                body.AppendChild(titleParagraph);
-
-                titleParagraph.ParagraphFormat.StyleName = "MyTitleStyle";
-                //titleParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-
-                // Title
-                Run titleRun = new Run(builder.Document)
-                {
-                    Text = ControlChar.CrLf + 
-                           ControlChar.CrLf + 
-                           "Questionnaire Export" + 
-                           ControlChar.CrLf +
-                           ControlChar.CrLf + 
-                           ControlChar.CrLf + 
-                           ControlChar.CrLf + 
-                           ControlChar.CrLf
-                };
-                //titleRun.Font.Color = Color.Black;
-                //titleRun.Font.Size = 44;
-                //titleRun.Font.Name = "Whitney HTF";
-                titleParagraph.AppendChild(titleRun);
 
                 // Logo
-                Shape logo = builder.InsertImage(GlobalProperties.logo, width:71, height:35);
+                Shape logo = builder.InsertImage(Resources.logo, width: 71, height: 35);
                 logo.WrapType = WrapType.None;
                 logo.RelativeHorizontalPosition = RelativeHorizontalPosition.Margin;
                 logo.HorizontalAlignment = HorizontalAlignment.Center;
                 logo.RelativeVerticalPosition = RelativeVerticalPosition.Paragraph;
                 logo.Top = 30;
+                
+                builder.Writeln();
+                builder.Writeln();
+                builder.Writeln();
+                builder.Writeln();
+                builder.Writeln();
+                builder.ParagraphFormat.StyleName = "qTitle";
+                builder.Writeln("Questionnaire Export");
+                builder.Writeln();
+                builder.Writeln();
 
-                titleParagraph.AppendChild(logo);
+                builder.ParagraphFormat.StyleName = "qSubtitle";
+                builder.Writeln(ele.Element("name").Value);
 
-                // Subtitle
-                Paragraph subTitleParagraph = new Paragraph(builder.Document);
-
-                subTitleParagraph.ParagraphFormat.StyleName = "Subtitle";
-                subTitleParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-
-                Run subTitleRun = new Run(builder.Document);
-                subTitleRun.Text = ele.Element("name").Value;
-                subTitleRun.Font.Color = Color.Black;
-                subTitleRun.Font.Size = 20;
-                subTitleRun.Font.Name = "Whitney HTF Semi";
-                subTitleParagraph.AppendChild(subTitleRun);
-                body.AppendChild(subTitleParagraph);
-
-                //Adviser Name
-                Paragraph adviserNameParagraph = new Paragraph(builder.Document);
-
-                adviserNameParagraph.ParagraphFormat.StyleName = "Subtitle";
-                adviserNameParagraph.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-
-                Run adviserNameRun = new Run(builder.Document)
-                {
-                    Text = ele.Element("adviserName").Value
-                };
-                adviserNameRun.Font.Color = Color.Gray;
-                adviserNameRun.Font.Size = 20;
-                subTitleRun.Font.Name = "Whitney HTF Semi";
-                adviserNameParagraph.AppendChild(adviserNameRun);
-
-                body.AppendChild(adviserNameParagraph);
+                builder.ParagraphFormat.StyleName = "qQuote";
+                builder.Writeln(ele.Element("adviserName").Value);
             }
 
         }

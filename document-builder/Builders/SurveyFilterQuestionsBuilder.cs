@@ -1,4 +1,5 @@
 ﻿using Aspose.Words;
+using Aspose.Words.Lists;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,39 +11,38 @@ namespace com.truewindglobal.aspose.Builders
 {
     public class SurveyFilterQuestionsBuilder
     {
-        public static void Build(DocumentBuilder builder, IEnumerable<XElement> query)
+        public static void Build(DocumentBuilder builder, IEnumerable<XElement> query, int sectionIndex, List list)
         {
             foreach (var ele in query)
             {
-                //Filter question
-                var id = ele.Attribute("id").Value;
-#if false
-                Console.Write("\t" + ele.Element("wording").Value);
-                Console.WriteLine(ele.Element("answer").Element("content").Value);
-#endif
-                Paragraph para = new Paragraph(builder.Document);
-                para.ParagraphFormat.StyleName = "MyNormalStyle";
-                builder.Document.LastSection.Body.AppendChild(para);
+                builder.MoveToDocumentEnd();
+                builder.InsertStyleSeparator();
+                builder.ParagraphFormat.StyleName = "qHeading 2";
+                builder.ListFormat.List = list;
+                builder.ListFormat.ListLevelNumber = 0;
+                builder.Writeln(ele.Element("wording").Value);
+                builder.ListFormat.RemoveNumbers();
+                builder.ListFormat.List = null;
 
-                Run run = new Run(builder.Document);
-                run.Text = ele.Element("wording").Value;
-                para.AppendChild(run);
+                if (ele.Element("answer").Element("content").Value == "1")
+                {
+                    builder.ParagraphFormat.StyleName = "qFilterYes";
+                    builder.Writeln("\t>YES");
+                }
+                else
+                {
+                    builder.ParagraphFormat.StyleName = "qFilterYes";
+                    builder.Writeln("\t>NO");
+                }
 
-                //builder.CurrentParagraph. = para;
-                builder.MoveTo(builder.Document.LastSection.Body.LastParagraph);
-                builder.Writeln(ele.Element("answer").Element("content").Value);
+                //Connected Questions
+                var q = ele.GetElementsUsingXPath("//self::fQuestion[@id='" + ele.Attribute("id").Value + "']//rQuestion");
+                
+                List groupList = builder.Document.Lists.Add(ListTemplate.BulletSquare);
+                groupList.ListLevels[0].StartAt = 1;
+                builder.ListFormat.ListLevelNumber = 2;
 
-                //Awnsers
-                var q = ele.GetElementsUsingXPath("//self::fQuestion[@id='" + id + "']//rQuestion");
-                SurveyRegularQuestionsBuilder.Build(builder, q);
-                //foreach (var e in q)
-                //{
-                //    Console.WriteLine("\t\t" + e.Element("wording").Value);
-                //    Console.WriteLine("\t\t" + e.Element("description").Value);
-                //    //get answers
-                //}
-
-
+                SurveyRegularQuestionsBuilder.Build(builder, q, true, groupList);
             }
         }
     }

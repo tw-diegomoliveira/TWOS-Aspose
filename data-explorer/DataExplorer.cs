@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Aspose.Words;
+using Aspose.Words.Lists;
+using System;
 using System.Xml.Linq;
 
 namespace com.truewindglobal.aspose
@@ -7,40 +9,29 @@ namespace com.truewindglobal.aspose
     {
         static void Main()
         {
-            //HelperMethods.ListAllTablesinDataSet(HelperMethods.LoadXMLDataIntoDataSet());
-            //HelperMethods.LoadQuestionnaireDocumentData();
-            //HelperMethods.ListTableContents(HelperMethods.LoadXMLDataIntoDataSet().Tables["rQuestion88"]);
-            //HelperMethods.ListAllXMLFile();
+            Document doc = new Document();
+            DocumentBuilder builder = new DocumentBuilder(doc);
 
-            //LoadWithReader();
-            //LoadWithXPath();
-            //LoadWithXmlSerializer();
+            List listMain = doc.Lists.Add(ListTemplate.NumberArabicDot);
+            listMain.IsRestartAtEachSection = true;
+            List listSecondary = doc.Lists.Add(ListTemplate.NumberLowercaseLetterDot);
+            listSecondary.IsRestartAtEachSection = true;
 
-            var doc = XElement.Load("dummy.xml");
-            //var query = from ele in doc.Elements(XName.Get("section"))
-            //            let p = ele.Parent
-            //            where p.Name == XName.Get("document")
-            //            && p.Parent == null
-            //            select ele;
+            var data = XElement.Load(GlobalProperties.Filename);
+            var sections = data.GetElementsUsingXPath("//self::section");
 
-            //foreach (var ele in query)
-            //{
-            //    Console.WriteLine(ele);
-            //}
-            //doc = XElement.Load("accountsNS.xml");
-            var query = doc.GetElementsUsingXPath("//self::document/section[@id=28]/fQuestion[@id=42]/rQuestion");
-
-            foreach (var ele in query)
+            foreach (var s in sections)
             {
-                var q = ele.GetElementsUsingXPath("//rQuestion[@id=119]//answer//answerDataExtended");
-                Console.WriteLine(ele);
-                foreach (var e in q)
-                {
-                    Console.WriteLine("\t\t" + e);
-                }
-            }
+                var filter = s.GetElementsUsingXPath("//self::section[@id=" + s.Attribute("id").Value + "]/fQuestion");
+                FilterQuestion.Build(builder, filter);
 
-            Console.ReadLine();
+                var regular = s.GetElementsUsingXPath("//self::section[@id=" + s.Attribute("id").Value + "]/rQuestion");
+                RegularQuestion.Build(builder, regular);
+
+                builder.InsertBreak(BreakType.SectionBreakNewPage);
+            }
+            doc.Save(GlobalProperties.DocumentPath + "Lists.pdf", SaveFormat.Pdf);
+            //Console.ReadLine();
 
         }
     }
