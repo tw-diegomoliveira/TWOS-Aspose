@@ -35,7 +35,7 @@ namespace com.truewindglobal.aspose.Builders
             Shape logo = builder.InsertImage(Resources.logo, width: 71, height: 35);
             logo.WrapType = WrapType.Through;
             logo.RelativeHorizontalPosition = RelativeHorizontalPosition.Margin;
-            logo.HorizontalAlignment = HorizontalAlignment.Center;
+            logo.HorizontalAlignment = HorizontalAlignment.Left;
             logo.RelativeVerticalPosition = RelativeVerticalPosition.Paragraph;
 
             // --- Create footer for pages other than first ---

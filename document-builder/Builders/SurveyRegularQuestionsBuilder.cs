@@ -32,9 +32,9 @@ namespace com.truewindglobal.aspose.Builders
                 //builder.InsertStyleSeparator();
                     case "Text":
                         builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
-                        builder.ListFormat.List = list;
+                        //builder.ListFormat.List = list;
                         builder.Writeln(e.Element("wording").Value);
-                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.RemoveNumbers();
                         //builder.ListFormat.List = null;
                         builder.ParagraphFormat.StyleName = "qDescription";
                         builder.ParagraphFormat.OutlineLevel = OutlineLevel.Level4;
@@ -46,9 +46,9 @@ namespace com.truewindglobal.aspose.Builders
 
                     case "Yes/No":
                         builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
-                        builder.ListFormat.List = list; 
+                        //builder.ListFormat.List = list; 
                         builder.Write(e.Element("wording").Value + "\n");
-                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.RemoveNumbers();
                         //builder.ListFormat.List = null;
                         builder.ParagraphFormat.StyleName = "qDescription";
                         builder.Writeln(e.Element("description").Value);
@@ -59,9 +59,9 @@ namespace com.truewindglobal.aspose.Builders
 
                     case "Upload":
                         builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
-                        builder.ListFormat.List = list;
+                        //builder.ListFormat.List = list;
                         builder.Writeln(e.Element("wording").Value);
-                        builder.ListFormat.RemoveNumbers();
+                        //builder.ListFormat.RemoveNumbers();
                         //builder.Writeln(e.Element("answer").Element("content").Value);
                         builder.Writeln();
                         var qu = e.GetElementsUsingXPath("//self::rQuestion[@answerType='Upload']/answer/binaryData");
@@ -74,7 +74,7 @@ namespace com.truewindglobal.aspose.Builders
 
                     case "Grouped":
                         builder.MoveToDocumentEnd();
-                        builder.InsertStyleSeparator();
+                        //builder.InsertStyleSeparator();
                         builder.ParagraphFormat.StyleName = isConnectedQuestion ? "qHeading 4" : "qHeading 2";
                         builder.ListFormat.List = list;
                         builder.Writeln(e.Element("wording").Value);
@@ -99,7 +99,7 @@ namespace com.truewindglobal.aspose.Builders
                                 case "Yes/No":
                                     builder.ParagraphFormat.StyleName = "qHeading 4";
                                     builder.ListFormat.List = newList;
-                                    builder.ListFormat.ListLevelNumber = 2;
+                                    builder.ListFormat.ListLevelNumber = 1;
                                     builder.Writeln(t.Element("wording").Value);
                                     builder.ListFormat.RemoveNumbers();
                                     //builder.ListFormat.List = null;
@@ -115,7 +115,7 @@ namespace com.truewindglobal.aspose.Builders
                                 case "Text":
                                     builder.ParagraphFormat.StyleName = "qHeading 4";
                                     builder.ListFormat.List = newList;
-                                    builder.ListFormat.ListLevelNumber = 2;
+                                    builder.ListFormat.ListLevelNumber = 1;
                                     builder.Writeln(t.Element("wording").Value);
                                     builder.ListFormat.RemoveNumbers();
                                     //builder.ListFormat.List = null;
@@ -288,35 +288,50 @@ namespace com.truewindglobal.aspose.Builders
                                     //cols ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/gName"
                                     //rows ->"//self::rQuestion[@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1]/wording"
                                     //content ->
-                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/gName");
+                                    
+                                    //get first FundId
+                                    var cc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1]/gId");
+                                    var ic = cc.FirstOrDefault().Value;
+                                    
+                                    // get number of question(col) per FundId
+                                    cc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1][" + ic + "]/gName");
+                                    
+
                                     var qq = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1]/wording");
                                     var qr = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended/content");
                                     //builder.InsertCell();
                                     //builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
 
-                                    var i = 1;
-                                    foreach (var ee in qc)
+                                    for (int j=0; j < cc.Count();j++)
                                     {
-                                        builder.StartTable();
-                                        if (i % 2 != 0)
-                                        {
-                                            // Some special features for the header row.
-                                            builder.InsertCell();
-                                            builder.CellFormat.HorizontalMerge = CellMerge.First;
-                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
-                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-                                            builder.Write(ee.Value);
-                                            for (int c = 0; c < 2; c++)
-                                            {
-                                                builder.InsertCell();
-                                                builder.CellFormat.HorizontalMerge = CellMerge.Previous;
-                                            }
-                                            builder.EndRow();
+                                        var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Fund as Title']/answer/answerDataExtended[@order=1][" + j + "]/gName");
 
-                                        }
-                                        i += 1;
-                                        builder.EndTable();
+
                                     }
+
+                                    //var i = 1;
+                                    //foreach (var ee in qc)
+                                    //{
+                                    //    builder.StartTable();
+                                    //    if (i % 2 != 0)
+                                    //    {
+                                    //        // Some special features for the header row.
+                                    //        builder.InsertCell();
+                                    //        builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                    //        builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                    //        builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                    //        builder.Write(ee.Value);
+                                    //        for (int c = 0; c < cc.Count(); c++)
+                                    //        {
+                                    //            builder.InsertCell();
+                                    //            builder.CellFormat.HorizontalMerge = CellMerge.Previous;
+                                    //        }
+                                    //        builder.EndRow();
+
+                                    //    }
+                                    //    i += 1;
+                                    //    builder.EndTable();
+                                    //}
 
                                     //var j = 1;
                                     //foreach (var e in qq)
@@ -341,6 +356,78 @@ namespace com.truewindglobal.aspose.Builders
                                 }
                                 if (qSubtypeType == "Ranking Table")
                                 {
+                                    builder.Writeln("Rnk");
+                                    // Gets all the FundId
+                                    var ad = e.GetElementsUsingXPath("//self::rQuestion[@answerType='Table'][@answerSubType='Ranking Table']/answer/answerDataExtended[@order=1]/gId");
+
+                                    // get only the first id
+                                    var fId = ad.FirstOrDefault().Value;
+
+                                    // get number of question(col) per FundId
+                                    var cc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Ranking Table']/answer/answerDataExtended[@order=1][gId=" + fId + "]/content").Count();
+
+                                    var qc = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Ranking Table']/answer/answerDataExtended[@order=1]/gName");
+                                    var i = 1;
+                                    foreach (var q in qc)
+                                    {
+                                        if (i % 2 != 0)
+                                        {
+                                            builder.StartTable();
+                                            builder.InsertCell();
+                                            builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                            builder.Write(q.Value);
+
+                                            for (int c = 0; c < cc; c++)
+                                            {
+                                                builder.InsertCell();
+                                                builder.CellFormat.HorizontalMerge = CellMerge.Previous;
+                                            }
+                                            builder.EndRow();
+
+                                            builder.InsertCell();
+                                            builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+
+                                            for (var j = 1; j <= cc; j++)
+                                            {
+                                                var ft = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Ranking Table']/answer/answerDataExtended[@order=1][" + j + "]/wording");
+                                                // Some special features for the header row.
+                                                //builder.InsertCell();
+                                                //builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                                //builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                                //builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                                //Console.WriteLine();
+                                                builder.InsertCell();
+                                                builder.CellFormat.Shading.BackgroundPatternColor = Color.White;
+                                                builder.Write(ft.FirstOrDefault().Value);
+                                            }
+                                            builder.EndRow();
+
+
+                                            //Questions (rows)
+                                            builder.InsertCell();
+                                            builder.CellFormat.HorizontalMerge = CellMerge.First;
+                                            builder.CellFormat.Shading.BackgroundPatternColor = Color.FromArgb(198, 217, 241);
+                                            builder.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                                            builder.Write("Rank {1}");
+                                            for (var j = 1; j <= cc; j++)
+                                            {
+                                                var ft = e.GetElementsUsingXPath("//self::rQuestion[@id=" + qId + "][@answerType='Table'][@answerSubType='Ranking Table']/answer/answerDataExtended[@order=1][" + j + "]/content");
+                                                // Some special features for the header row.
+                                                //Console.WriteLine();
+                                                builder.InsertCell();
+                                                builder.Write(ft.FirstOrDefault().Value);
+
+                                            }
+                                            builder.EndRow();
+                                            builder.EndTable();
+                                            builder.Writeln();
+                                        }
+                                        i += 1;
+                                    }
                                     builder.InsertHtml(style + "<p>Ranking Table</p>");
                                     builder.InsertHtml(style + "<p>Not yet Implemented</p>");
                                 }
@@ -348,6 +435,7 @@ namespace com.truewindglobal.aspose.Builders
                             else
                             {
                                 builder.InsertHtml(style + e.Element("answer").Element("binaryData").Attribute("name").Value);
+                                builder.Writeln();
                             }
                         }
                         else

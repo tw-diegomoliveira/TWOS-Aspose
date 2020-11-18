@@ -23,7 +23,6 @@ namespace com.truewindglobal.aspose.Builders
 
             foreach (var ele in query)
             {
-
                 // Logo
                 Shape logo = builder.InsertImage(Resources.logo, width: 71, height: 35);
                 logo.WrapType = WrapType.None;
@@ -37,14 +36,18 @@ namespace com.truewindglobal.aspose.Builders
                 builder.Writeln();
                 builder.Writeln();
                 builder.Writeln();
+                builder.Writeln();
                 builder.ParagraphFormat.StyleName = "qTitle";
-                builder.Writeln("Questionnaire Export");
+                builder.Writeln("15(c) Questionnaire");
+                builder.Writeln(ele.Element("clientName").Value);
                 builder.Writeln();
                 builder.Writeln();
-
+                builder.ParagraphFormat.Style.Font.Size = 24;
+                builder.Writeln("Funds");
+                builder.Writeln();
+                builder.Writeln();
                 builder.ParagraphFormat.StyleName = "qSubtitle";
                 builder.Writeln(ele.Element("name").Value);
-
                 builder.ParagraphFormat.StyleName = "qQuote";
                 builder.Writeln(ele.Element("adviserName").Value);
             }

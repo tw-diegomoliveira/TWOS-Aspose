@@ -20,6 +20,8 @@ namespace com.truewindglobal.aspose.Builders
             builder.Writeln();
             builder.InsertTableOfContents("\\o \"1-1\" \\h \\z \\u");
             builder.Document.Styles[StyleIdentifier.Toc1].Font.Name = GlobalProperties.FontName;
+            builder.Document.Styles[StyleIdentifier.Toc1].ParagraphFormat.LineSpacingRule = LineSpacingRule.Multiple;
+            builder.Document.Styles[StyleIdentifier.Toc1].ParagraphFormat.LineSpacing = 18.0;
         }
     }
 }

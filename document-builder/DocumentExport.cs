@@ -124,38 +124,6 @@ namespace com.truewindglobal.aspose
         {
             builder.Font.Name = GlobalProperties.FontName;
             builder.Font.Size = GlobalProperties.FontSize;
-
-            /// <summary>
-            /// Custom styles for the all document
-            /// </summary>
-#if false
-            //Title
-            Style paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MyTitleStyle");
-            paraStyle.Font.Bold = true;
-            paraStyle.Font.Size = 28;
-            paraStyle.Font.Name = "Whitney HTF Semi";
-            paraStyle.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-
-            //SubTitle
-            paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MySubTitleStyle");
-            paraStyle.Font.Bold = true;
-            paraStyle.Font.Size = 22;
-            paraStyle.Font.Name = "Whitney HTF Semi";
-            paraStyle.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-
-            //Heading1
-            paraStyle = builder.Document.Styles.Add(StyleType.Paragraph, "MyHeading1Style");
-            paraStyle.Font.Bold = false;
-            paraStyle.Font.Size = 20;
-            paraStyle.Font.Name = "Whitney HTF";
-            paraStyle.ParagraphFormat.Alignment = ParagraphAlignment.Left;
-
-            //Normal
-            StyleCollection styles = builder.Document.Styles;
-            styles.DefaultFont.Name = "Whitney HTF Book";
-            styles.DefaultFont.Size = 12;
-            styles.Add(StyleType.Paragraph, "MyNormalStyle");
-#endif
         }
     }
 }

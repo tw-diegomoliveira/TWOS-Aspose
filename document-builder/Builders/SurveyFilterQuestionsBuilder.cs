@@ -16,23 +16,23 @@ namespace com.truewindglobal.aspose.Builders
             foreach (var ele in query)
             {
                 builder.MoveToDocumentEnd();
-                builder.InsertStyleSeparator();
+                //builder.InsertStyleSeparator();
                 builder.ParagraphFormat.StyleName = "qHeading 2";
-                builder.ListFormat.List = list;
-                builder.ListFormat.ListLevelNumber = 0;
+                //builder.ListFormat.List = list;
+                //builder.ListFormat.ListLevelNumber = 0;
                 builder.Writeln(ele.Element("wording").Value);
-                builder.ListFormat.RemoveNumbers();
-                builder.ListFormat.List = null;
+                //builder.ListFormat.RemoveNumbers();
+                //builder.ListFormat.List = null;
 
                 if (ele.Element("answer").Element("content").Value == "1")
                 {
                     builder.ParagraphFormat.StyleName = "qFilterYes";
-                    builder.Writeln("\t>YES");
+                    builder.Writeln("\n>Yes");
                 }
                 else
                 {
                     builder.ParagraphFormat.StyleName = "qFilterYes";
-                    builder.Writeln("\t>NO");
+                    builder.Writeln("\n>No");
                 }
 
                 //Connected Questions

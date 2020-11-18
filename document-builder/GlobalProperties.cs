@@ -17,7 +17,7 @@ namespace com.truewindglobal.aspose
 
         //XML Data information
         public static string xmlFile => @"C:\AsposeWordsDemo\FSdata2.xml";
-        public static string stylesDoc => @"C:\AsposeWordsDemo\Styles_Questionnaire_v2.4.docx";
+        public static string stylesDoc => @"C:\AsposeWordsDemo\Styles_Questionnaire_v2.5.docx";
 
         // Logo
         public static string logo => @"C:\AsposeWordsDemo\logo.png";
